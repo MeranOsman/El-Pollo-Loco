@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: game.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: game.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let canvas;
+let world
+let isFullScreenBlocked = false;
+let isFullscreen = false;
+let startButton;
+let restartButton;
+let controlInfo;
+
+
+/**
+ * Initializes the application by creating the Canvas element, a keyboard, the world, and various UI elements.
+ */
+function init() {
+    canvas = document.getElementById('canvas');
+    let keyboard = new Keyboard();
+    world = new World(canvas, keyboard);
+    startButton = document.getElementById('start-button');
+    restartButton = document.getElementById('restart-button');
+    controlInfo = document.getElementById('control-info');
+}
+
+
+/**
+ * Toggles between fullscreen and normal mode for the canvas container element.
+ */
+function toggleFullscreen() {
+    let fullscreen = document.getElementById('canvas-container');
+    if (isFullscreen) {
+        exitFullscreen();
+    } else {
+        enterFullscreen(fullscreen);
+    }
+}
+
+
+/**
+ * Activates or deactivates fullscreen mode and adjusts the layout accordingly.
+ * 
+ * @param {HTMLElement} fullscreen - The container element containing the canvas.
+ */
+function enterFullscreen(fullscreen) {
+    enterFullscreenContent(fullscreen);
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.borderRadius = '0';
+    if (window.innerHeight >= 500) {
+        startButton.style.left = '45%';
+        restartButton.style.left = '58%';
+        controlInfo.style.left = '43%';
+    }
+}
+
+
+/**
+ * Requests fullscreen mode for the specified element.
+ * 
+ * @param {HTMLElement} element - The element for which fullscreen mode is requested.
+ */
+function enterFullscreenContent(element) {
+    if (element.requestFullscreen) {
+        element.requestFullscreen();
+    } else if (element.msRequestFullscreen) {
+        element.msRequestFullscreen();
+    } else if (element.webkitRequestFullscreen) {
+        element.webkitRequestFullscreen();
+    }
+
+    isFullscreen = true;
+}
+
+
+/**
+ * Handles the 'fullscreenchange' event, toggling between fullscreen mode and exit.
+ */
+document.addEventListener('fullscreenchange', (event) => {
+    if (!isFullScreenBlocked) {
+        isFullScreenBlocked = true;
+    } else {
+        isFullScreenBlocked = false;
+        exitFullscreen();
+    }
+});
+
+
+/**
+ * Exits fullscreen mode if supported.
+ */
+function exitFullscreen() {
+    if (isFullscreenSupported()) {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        }
+    }
+    isFullscreen = false;
+    if (window.innerHeight >= 500) {
+        setStylesAfterExitFullscreen();
+    }
+}
+
+
+/**
+ * Checks if fullscreen mode is supported by the current browser.
+ * 
+ * @returns {boolean} - True if fullscreen mode is supported, otherwise false.
+ */
+function isFullscreenSupported() {
+    return (document.fullscreenElement || document.webkitFullscreenElement) &amp;&amp; (document.exitFullscreen || document.webkitExitFullscreen);
+}
+
+
+/**
+ * Sets specific style properties after exiting fullscreen mode.
+ */
+function setStylesAfterExitFullscreen() {
+    canvas.style.borderRadius = '20px';
+    restartButton.style.left = '44%';
+    startButton.style.left = '35%';
+    controlInfo.style.left = '30%';
+}
+
+
+/**
+ * Toggles the display of the control information element.
+ */
+function toggleInfo() {
+    let controlInfo = document.getElementById("control-info");
+
+    if (controlInfo.style.display === "none" || controlInfo.style.display === "") {
+        controlInfo.style.display = "block";
+    } else {
+        controlInfo.style.display = "none";
+    }
+}
+
+
+/**
+ * Adds an event listener for the DOMContentLoaded event that disables the context menu for all images on the page.
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    const images = document.querySelectorAll('img');
+
+    images.forEach((img) => {
+        img.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+        });
+    });
+});</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#enterFullscreen">enterFullscreen</a></li><li><a href="global.html#enterFullscreenContent">enterFullscreenContent</a></li><li><a href="global.html#exitFullscreen">exitFullscreen</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#isFullscreenSupported">isFullscreenSupported</a></li><li><a href="global.html#setStylesAfterExitFullscreen">setStylesAfterExitFullscreen</a></li><li><a href="global.html#toggleFullscreen">toggleFullscreen</a></li><li><a href="global.html#toggleInfo">toggleInfo</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Wed Jan 24 2024 19:18:16 GMT+0100 (GMT+01:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
